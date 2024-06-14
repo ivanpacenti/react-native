@@ -10,39 +10,44 @@ import SettingsScreen from './screens/SettingsScreen';
 import LoginScreen from './screens/LoginScreen';
 import TicketScreen from './screens/TicketScreen';
 import { UserProvider, useUser } from './contexts/UserContext';
+import { TicketProvider } from './contexts/TicketContext';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
 
-const MainTabs = () => (
-    <Tab.Navigator
-        screenOptions={({ route }) => ({
-            tabBarIcon: ({ focused, color, size }) => {
-                let iconName;
+const MainTabs = () => {
+    return (
+        <Tab.Navigator
+            screenOptions={({ route }) => ({
+                tabBarIcon: ({ focused, color, size }) => {
+                    let iconName;
 
-                if (route.name === 'Home') {
-                    iconName = focused ? 'information-circle' : 'information-circle-outline';
-                } else if (route.name === 'Details') {
-                    iconName = focused ? 'list' : 'list-outline';
-                } else if (route.name === 'Settings') {
-                    iconName = focused ? 'settings' : 'settings-outline';
-                } else if (route.name === 'Tickets') {
-                    iconName = focused ? 'ticket' : 'ticket-outline';
-                }
+                    if (route.name === 'Home') {
+                        iconName = focused ? 'home' : 'home-outline';
+                    } else if (route.name === 'Details') {
+                        iconName = focused ? 'list' : 'list-outline';
+                    } else if (route.name === 'Settings') {
+                        iconName = focused ? 'settings' : 'settings-outline';
+                    } else if (route.name === 'Tickets') {
+                        iconName = focused ? 'ticket' : 'ticket-outline';
+                    }
 
-                return <Ionicons name={iconName} size={size} color={color} />;
-            },
-            tabBarActiveTintColor: 'tomato',
-            tabBarInactiveTintColor: 'gray',
-            tabBarShowLabel: false,
-        })}
-    >
-        <Tab.Screen name="Home" component={HomeScreen} />
-        <Tab.Screen name="Details" component={DetailsScreen} />
-        <Tab.Screen name="Settings" component={SettingsScreen} />
-        <Tab.Screen name="Tickets" component={TicketScreen} />
-    </Tab.Navigator>
-);
+                    return <Ionicons name={iconName} size={size} color={color} />;
+                },
+                tabBarActiveTintColor: 'tomato',
+                tabBarInactiveTintColor: 'gray',
+                headerShown: false,
+            })}
+        >
+            <Tab.Screen name="Home" component={HomeScreen} />
+            <Tab.Screen name="Details" component={DetailsScreen} />
+            <Tab.Screen name="Settings">
+                {() => <SettingsScreen />}
+            </Tab.Screen>
+            <Tab.Screen name="Tickets" component={TicketScreen} />
+        </Tab.Navigator>
+    );
+};
 
 const App = () => {
     const { isAuthenticated, handleLogin, handleLogout } = useUser();
@@ -64,6 +69,8 @@ const App = () => {
 
 export default () => (
     <UserProvider>
-        <App />
+        <TicketProvider>
+            <App />
+        </TicketProvider>
     </UserProvider>
 );

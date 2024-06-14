@@ -1,15 +1,14 @@
 import React from 'react';
 import { View, Text, Button, StyleSheet } from 'react-native';
-import {useUser} from "../contexts/UserContext";
+import { useUser } from '../contexts/UserContext';
 
-const SettingsScreen = ({  onLogout }) => {
-    const {user} = useUser();
+const SettingsScreen = ({ navigation }) => {
+    const { handleLogout } = useUser();
 
     return (
         <View style={styles.container}>
             <Text style={styles.title}>Settings</Text>
-            <Text>Username: {user?.username}</Text>
-            <Button title="Logout" onPress={onLogout} />
+            <Button title="Logout" onPress={handleLogout} />
         </View>
     );
 };
@@ -19,6 +18,7 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
+        padding: 16,
     },
     title: {
         fontSize: 24,

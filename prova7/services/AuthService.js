@@ -9,6 +9,7 @@ export const login = async (username, password, codiceAzienda) => {
             headers: {
                 'Content-Type': 'application/json',
                 'Accept': 'application/json',
+                'Cookie': 'XDEBUG_SESSION=PHPSTORM_IVAN',
             },
             body: JSON.stringify({
                 username: username,
