@@ -30,7 +30,10 @@ const MainTabs = ({ user, onLogout }) => (
             },
             tabBarActiveTintColor: 'tomato',
             tabBarInactiveTintColor: 'gray',
+          headerShown: false,
+
         })}
+
     >
         <Tab.Screen name="Home">
             {(props) => <HomeScreen {...props} user={user} />}
@@ -60,13 +63,14 @@ export default function App() {
 
     return (
         <NavigationContainer>
+
             <Stack.Navigator>
                 {isAuthenticated ? (
-                    <Stack.Screen name="MainTabs">
+                    <Stack.Screen name="MainTabs" options={{headerShown:false}}>
                         {(props) => <MainTabs {...props} user={user} onLogout={handleLogout} />}
                     </Stack.Screen>
                 ) : (
-                    <Stack.Screen name="Login">
+                    <Stack.Screen name="Login" options={{headerShown:false}}>
                         {(props) => <LoginScreen {...props} onLogin={handleLogin} />}
                     </Stack.Screen>
                 )}

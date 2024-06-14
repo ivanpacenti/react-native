@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
-import { View, Text, TextInput, Button, Alert, StyleSheet } from 'react-native';
-import { login } from '../services/AuthService';
+import React, {useState} from 'react';
+import {View, Text, TextInput, Button, Alert, StyleSheet, ActivityIndicator} from 'react-native';
+import {login} from '../services/AuthService';
 
-const LoginScreen = ({ navigation, onLogin }) => {
+const LoginScreen = ({navigation, onLogin}) => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [codiceAzienda, setCodiceAzienda] = useState('');
@@ -19,10 +19,9 @@ const LoginScreen = ({ navigation, onLogin }) => {
             setCodiceAziendaError(false);
 
             try {
-                const { user, error } = await login(username, password, codiceAzienda);
+                const {user, error} = await login(username, password, codiceAzienda);
 
                 if (user) {
-                    console.log('Login successful:', user);
                     setLoading(false);
                     onLogin(user);
                 } else {
@@ -30,21 +29,15 @@ const LoginScreen = ({ navigation, onLogin }) => {
                     if (error === 'credenziali') {
                         setUsernameError(true);
                         setPasswordError(true);
-                        Alert.alert('Login failed', 'Username or password is incorrect.');
                     } else if (error === 'chiave') {
                         setCodiceAziendaError(true);
-                        Alert.alert('Login failed', 'Codice azienda is incorrect.');
                     } else {
-                        Alert.alert('Login failed', 'Unknown error occurred.');
                     }
                 }
             } catch (error) {
-                console.error('Login failed:', error.message);
                 setLoading(false);
                 Alert.alert('Login failed', error.message || 'Impossibile effettuare il login. Riprova.');
             }
-        } else {
-            Alert.alert('Error', 'Please fill in all fields.');
         }
     };
 
@@ -70,8 +63,9 @@ const LoginScreen = ({ navigation, onLogin }) => {
                 value={codiceAzienda}
                 onChangeText={setCodiceAzienda}
             />
-            <Button title="Login" onPress={handleLoginPress} disabled={loading} />
-            {loading && <Text>Loading...</Text>}
+
+            {loading ? <ActivityIndicator size="large" color="#0000ff"/> :
+                <Button title="Login" onPress={handleLoginPress} disabled={loading}/>}
         </View>
     );
 };
