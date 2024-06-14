@@ -1,7 +1,10 @@
 import React from 'react';
 import { View, Text, Button, StyleSheet } from 'react-native';
+import {useUser} from "../contexts/UserContext";
 
-const SettingsScreen = ({ user, onLogout }) => {
+const SettingsScreen = ({  onLogout }) => {
+    const {user} = useUser();
+
     return (
         <View style={styles.container}>
             <Text style={styles.title}>Settings</Text>

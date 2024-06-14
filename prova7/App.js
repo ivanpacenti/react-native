@@ -1,5 +1,5 @@
 import 'react-native-gesture-handler';
-import React, { useState } from 'react';
+import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
@@ -8,11 +8,13 @@ import HomeScreen from './screens/HomeScreen';
 import DetailsScreen from './screens/DetailsScreen';
 import SettingsScreen from './screens/SettingsScreen';
 import LoginScreen from './screens/LoginScreen';
+import TicketScreen from './screens/TicketScreen';
+import { UserProvider, useUser } from './contexts/UserContext';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
 
-const MainTabs = ({ user, onLogout }) => (
+const MainTabs = () => (
     <Tab.Navigator
         screenOptions={({ route }) => ({
             tabBarIcon: ({ focused, color, size }) => {
@@ -24,57 +26,44 @@ const MainTabs = ({ user, onLogout }) => (
                     iconName = focused ? 'list' : 'list-outline';
                 } else if (route.name === 'Settings') {
                     iconName = focused ? 'settings' : 'settings-outline';
+                } else if (route.name === 'Tickets') {
+                    iconName = focused ? 'ticket' : 'ticket-outline';
                 }
 
                 return <Ionicons name={iconName} size={size} color={color} />;
             },
             tabBarActiveTintColor: 'tomato',
             tabBarInactiveTintColor: 'gray',
-          headerShown: false,
-
+            tabBarShowLabel: false,
         })}
-
     >
-        <Tab.Screen name="Home">
-            {(props) => <HomeScreen {...props} user={user} />}
-        </Tab.Screen>
-        <Tab.Screen name="Details">
-            {(props) => <DetailsScreen {...props} user={user} />}
-        </Tab.Screen>
-        <Tab.Screen name="Settings">
-            {(props) => <SettingsScreen {...props} user={user} onLogout={onLogout} />}
-        </Tab.Screen>
+        <Tab.Screen name="Home" component={HomeScreen} />
+        <Tab.Screen name="Details" component={DetailsScreen} />
+        <Tab.Screen name="Settings" component={SettingsScreen} />
+        <Tab.Screen name="Tickets" component={TicketScreen} />
     </Tab.Navigator>
 );
 
-export default function App() {
-    const [isAuthenticated, setIsAuthenticated] = useState(false);
-    const [user, setUser] = useState(null);
-
-    const handleLogin = (user) => {
-        setIsAuthenticated(true);
-        setUser(user);
-    };
-
-    const handleLogout = () => {
-        setIsAuthenticated(false);
-        setUser(null);
-    };
+const App = () => {
+    const { isAuthenticated, handleLogin, handleLogout } = useUser();
 
     return (
         <NavigationContainer>
-
             <Stack.Navigator>
                 {isAuthenticated ? (
-                    <Stack.Screen name="MainTabs" options={{headerShown:false}}>
-                        {(props) => <MainTabs {...props} user={user} onLogout={handleLogout} />}
-                    </Stack.Screen>
+                    <Stack.Screen name="MainTabs" options={{ headerShown: false }} component={MainTabs} />
                 ) : (
-                    <Stack.Screen name="Login" options={{headerShown:false}}>
+                    <Stack.Screen name="Login" options={{ headerShown: false }}>
                         {(props) => <LoginScreen {...props} onLogin={handleLogin} />}
                     </Stack.Screen>
                 )}
             </Stack.Navigator>
         </NavigationContainer>
     );
-}
+};
+
+export default () => (
+    <UserProvider>
+        <App />
+    </UserProvider>
+);

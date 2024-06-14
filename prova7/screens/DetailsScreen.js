@@ -1,7 +1,10 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
+import {useUser} from "../contexts/UserContext";
 
-const DetailsScreen = ({ user }) => {
+const DetailsScreen = () => {
+    const {user} = useUser();
+
     return (
         <View style={styles.container}>
             <Text style={styles.title}>User Details</Text>
